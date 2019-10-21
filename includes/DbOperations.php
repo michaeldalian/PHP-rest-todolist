@@ -20,19 +20,19 @@ class MysqlDatabase implements iReadOperation, iCreateOperation
         $this->con = $db->connect();
     }
 
-    // getAllTodos is returning all the Todos from database
+    // getAllTodos is returning all the todos from database
     public function getAllTodos(): array
     {
         $stmt = $this->con->prepare(
-            "SELECT td_id, td_done, td_date, td_label, td_comment  FROM Todos;"
+            "SELECT td_id as id, td_done as done, td_date as date, td_label as label, td_comment as comment  FROM todos;"
         );
 
         // For eache row, put the column value in the linked variable
-        $stmt->bindColumn('td_id', $id, PDO::PARAM_INT);
-        $stmt->bindColumn('td_done', $done, PDO::PARAM_INT);
-        $stmt->bindColumn('td_date', $date, PDO::PARAM_STR);
-        $stmt->bindColumn('td_label', $label, PDO::PARAM_STR);
-        $stmt->bindColumn('td_comment', $commentary, PDO::PARAM_STR);
+        $stmt->bindColumn('id', $id, PDO::PARAM_INT);
+        $stmt->bindColumn('done', $done, PDO::PARAM_INT);
+        $stmt->bindColumn('date', $date, PDO::PARAM_STR);
+        $stmt->bindColumn('label', $label, PDO::PARAM_STR);
+        $stmt->bindColumn('comment', $commentary, PDO::PARAM_STR);
         // met le resultat de la vue sql dans le PDO
         $stmt->execute();
         $result = array();
@@ -60,16 +60,16 @@ class MysqlDatabase implements iReadOperation, iCreateOperation
     public function getDetailById($id): array
     {
         $stmt = $this->con->prepare(
-            "SELECT td_id, td_done, td_date, td_label, td_comment  FROM Todos WHERE td_id = :id;"
+            "SELECT id, done, date, label, comment  FROM todos WHERE id = :id;"
         );
 
         // Bind the parameters with their sql name == put the value of the parameter in the sql.
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         // For eache row, put the column value in the linked variable
-        $stmt->bindColumn('td_done', $done, PDO::PARAM_INT);
-        $stmt->bindColumn('td_date', $date, PDO::PARAM_STR);
-        $stmt->bindColumn('td_label', $label, PDO::PARAM_STR);
-        $stmt->bindColumn('td_comment', $commentary, PDO::PARAM_STR);
+        $stmt->bindColumn('done', $done, PDO::PARAM_INT);
+        $stmt->bindColumn('date', $date, PDO::PARAM_STR);
+        $stmt->bindColumn('label', $label, PDO::PARAM_STR);
+        $stmt->bindColumn('comment', $commentary, PDO::PARAM_STR);
         // met le resultat de la vue sql dans le PDO
         $stmt->execute();
         $result = array();
@@ -93,41 +93,41 @@ class MysqlDatabase implements iReadOperation, iCreateOperation
         $stmt = null;
     }
 
-    // searchTodos is returning an array of matching Todos
+    // searchTodos is returning an array of matching todos
     public function searchTodos(array $query): array
     {
         $stmt = $this->con->prepare(
-            'SELECT td_id, td_label, td_date, td_comment FROM Todos WHERE td_id != 0' . (is_null($query['equal-to'])
+            'SELECT id, label, date, comment FROM todos WHERE id != 0' . (is_null($query['equal-to'])
                 ? ''
-                : ' AND td_date = ' . $query['equal-to']) . (is_null($query['more-than'])
+                : ' AND date = ' . $query['equal-to']) . (is_null($query['more-than'])
                 ? ''
-                : ' AND td_date > ' . $query['more-than']) . (is_null($query['less-than'])
+                : ' AND date > ' . $query['more-than']) . (is_null($query['less-than'])
                 ? ''
-                : ' AND td_date < ' . $query['less-than']) . (is_null($query['date-is'])
+                : ' AND date < ' . $query['less-than']) . (is_null($query['date-is'])
                 ? ''
                 : " AND DATEDIFF('" .
                 $query['date-is'] .
-                "', td_date) = 0") . (is_null($query['before-date'])
+                "', date) = 0") . (is_null($query['before-date'])
                 ? ''
                 : " AND DATEDIFF('" .
                 $query['before-date'] .
-                "', td_date) > 0") . (is_null($query['after-date'])
+                "', date) > 0") . (is_null($query['after-date'])
                 ? ''
                 : " AND DATEDIFF('" .
                 $query['after-date'] .
-                "', td_date) < 0") . (is_null($query['in-year'])
+                "', date) < 0") . (is_null($query['in-year'])
                 ? ''
-                : ' AND EXTRACT(YEAR FROM td_date) = ' . $query['in-year'])
+                : ' AND EXTRACT(YEAR FROM date) = ' . $query['in-year'])
         );
 
         echo "<br>", $query;
 
         // For eache row, put the column value in the linked variable
-        $stmt->bindColumn('td_id', $id, PDO::PARAM_INT);
-        $stmt->bindColumn('td_done', $done, PDO::PARAM_INT);
-        $stmt->bindColumn('td_date', $date, PDO::PARAM_STR);
-        $stmt->bindColumn('td_label', $label, PDO::PARAM_STR);
-        $stmt->bindColumn('td_comment', $commentary, PDO::PARAM_STR);
+        $stmt->bindColumn('id', $id, PDO::PARAM_INT);
+        $stmt->bindColumn('done', $done, PDO::PARAM_INT);
+        $stmt->bindColumn('date', $date, PDO::PARAM_STR);
+        $stmt->bindColumn('label', $label, PDO::PARAM_STR);
+        $stmt->bindColumn('comment', $commentary, PDO::PARAM_STR);
         // met le resultat de la vue sql dans le PDO
         $stmt->execute();
         $result = array();
@@ -154,7 +154,7 @@ class MysqlDatabase implements iReadOperation, iCreateOperation
     public function createTodo($values): array
     {
         $stmt = $this->con->prepare(
-            'INSERT INTO Todos(td_label, td_done, td_date, td_comment) VALUES ( :label, :done, :date, :comment)'
+            'INSERT INTO todos(label, done, date, comment) VALUES ( :label, :done, :date, :comment)'
         );
         // Bind the parameters with their sql name == put the value of the parameter in the sql.
         $stmt->bindParam(':label', $label, PDO::PARAM_STR);

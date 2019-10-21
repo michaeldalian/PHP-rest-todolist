@@ -20,7 +20,6 @@ class MysqlPdoDbConnect implements iDbConnect
                 DB_PASS,
                 array(PDO::ATTR_PERSISTENT => true)
             );
-            echo "Connecté\n";
         } catch (Exception $e) {
             die("Impossible de se connecter : " . $e->getMessage());
         }

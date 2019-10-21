@@ -37,9 +37,9 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 /**
  * Define app routes
  *
- * /Todos return all Todos
+ * /Todos return alltodos
  * /Todos/detail/{id} return a single Todo detail
- * /search return a set of matching Todos
+ * /search return a set of matchingtodos
  * /create insert a Todo with parameters
  * / return a default page
  */
@@ -148,11 +148,11 @@ $app->get('/', function (Request $request, Response $response, $args) {
         json_encode(array(
             'message' => 'You are not at a valid endpoint',
             'endpoints' => array(
-                '/Todos' => 'List all Todos',
+                '/Todos' => 'List alltodos',
                 '/create' => 'create one Todo',
                 '/Todos/detail/{id}' =>
                 'Get the detail of an Todo by its id',
-                '/search' => 'Search for an Todo or a set of Todos'
+                '/search' => 'Search for an Todo or a set oftodos'
             )
         ))
     );
