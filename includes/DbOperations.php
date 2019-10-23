@@ -6,6 +6,7 @@
 
 require_once dirname(__FILE__) . '/../interfaces/iReadOperation.php';
 require_once dirname(__FILE__) . '/../interfaces/iCreateOperation.php';
+include_once dirname(__FILE__) . '/Constants.php';
 
 class MysqlDatabase implements iReadOperation, iCreateOperation
 {
@@ -15,8 +16,17 @@ class MysqlDatabase implements iReadOperation, iCreateOperation
     // Constructor
     function __construct()
     {
-        require_once dirname(__FILE__) . '/MysqlPdoDbConnect.php';
-        $db = new MysqlPdoDbConnect();
+
+        // require_once dirname(__FILE__) . '/MysqlPdoDbConnect.php';
+        // $db = new MysqlPdoDbConnect();
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/Todolist_rest/classes/MysqlConnection.php';
+        $db = new MysqlConnection();
+        $db->setAddress(DB_HOST);
+        $db->setUser(DB_USER);
+        $db->setPassword(DB_PASS);
+        $db->setDbName(DB_NAME);
+        // prévoir charset
+
         $this->con = $db->connect();
     }
 
@@ -120,7 +130,7 @@ class MysqlDatabase implements iReadOperation, iCreateOperation
                 : ' AND EXTRACT(YEAR FROM date) = ' . $query['in-year'])
         );
 
-        echo "<br>", $query;
+        // echo "<br>", $query;
 
         // For eache row, put the column value in the linked variable
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);

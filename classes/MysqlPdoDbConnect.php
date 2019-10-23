@@ -5,10 +5,13 @@
  */
 
 require_once dirname(__FILE__) . '/../interfaces/iDbConnect.php';
+require_once dirname(__FILE__) . '/../classes/DbConnect.php';
 
-class MysqlPdoDbConnect implements iDbConnect
+class MysqlPdoDbConnect extends DbConnect implements iDbConnect
 {
     private $con;
+
+    parent::dbAdress = DB_NAME;
 
     function connect()
     {
@@ -20,7 +23,6 @@ class MysqlPdoDbConnect implements iDbConnect
                 DB_PASS,
                 array(PDO::ATTR_PERSISTENT => true)
             );
-            $this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (Exception $e) {
             die("Impossible de se connecter : " . $e->getMessage());
         }
